@@ -20,6 +20,23 @@ FILE *fp;
  	fputs( cadena, fp );
     }
  	fclose ( fp );
+ 	////
+ 	for(a;a<100;a++){
+ 	fputs( cadena, fp );
+    }
+ 	fclose ( fp );
+ 	for(a;a<100;a++){
+ 	fputs( cadena, fp );
+    }
+ 	fclose ( fp );
+ 	for(a;a<100;a++){
+ 	fputs( cadena, fp );
+    }
+ 	fclose ( fp );
+ 	for(a;a<100;a++){
+ 	fputs( cadena, fp );
+    }
+ 	fclose ( fp );
 
 
         printf("Hola mundo");
