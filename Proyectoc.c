@@ -9,21 +9,20 @@
 int main()
 {
 
-
-
-// linea de comando que crea la carpeta XD"
-
-//Comprobando Si Existe El archivo
-
+//verificando el metodo de creacion
+///////////////////////////////////////
+///////////////////////////////////////
+//////////////////////////////////////
+// primero se tiene que tener el nombre del disco XD
+/// aca van los parametros ///
 char archivo[]="/home/romoeoaxpuac/Escritorio/Discoxxxx.dsk";
-int size = 101; // nombre y ruta de el archivo
+char archivo2[]="/home/romoeoaxpuac/Escritorio/Discoxxxx.dsk";
+int size = 101; // Tamaño del archivo
 char cad[] = " ";
-
- FILE *fpx = fopen(archivo,"r"); //<-abriendl el archivo para su busqueda
-        char separador[] = "\/";
+char separador[] = "\/";
         char h [] = "";
         char * trozo;
-     /*
+        int valor = 0;
         trozo = strtok( archivo, separador);
 
         while( trozo != NULL ) {
@@ -32,33 +31,30 @@ char cad[] = " ";
         //printf( "Trozo : %s \n", trozo);//<- buscando .dsk
         trozo = strtok( NULL, separador);
         }
-        if (strstr(h,".dsk") == NULL){
-        puts("El Disco no se puede crear, el comando se encuentra en defecto");
+        //verificamos si el archivo tiene la extension devida
+        if ( (strstr(h,".dsk") == NULL) && (strstr(h,".DSK") == NULL) ){
+            puts("El Disco no se puede crear, el comando se encuentra en defecto");
         }else {
-        puts("Ciudad incorrecta");
+            //CREAMOS EL OBJETO DE ARCHIVOS Y VEMOS SI NO HA SIDO CREADO CON anterioridad
+            FILE *fpx = fopen(archivo2,"r");
+                if( fpx != NULL) {
+                    printf("Error, El Disco Ya Existe");
+                    fclose(fpx);
+                }
+                //si el archivo no existe pos lo creamos
+                else {
+                    FILE *fpx2 = fopen(archivo2,"wb+");
+                        int a= 0;
+                        for(a;a<size;a++){
+                            fputs( cad, fpx2 );
+                        }
+                    fclose((fpx2));
+                    printf("Disco Creado Con Exito");
+                }
         }
-*/
-    //esta parte examina si ya existe el archivo
-
-    if( fpx != NULL) {
-        printf("Error, El Disco Ya Existe\n");
-        fclose(fpx);
-    }
-    //aca es para ver si el archivo no existe y tiene la extensón .dsk
-    else {
-            FILE *fpx2 = fopen(archivo,"wb+");
-            int a= 0;
-            for(a;a<size;a++){
-                fputs( cad, fpx2 );
-            }
-            fclose((fpx2));
-            printf("Disco Creado Con Exito");
-    }
-
-//////
-
-
-
+///////////////////////////////////////
+///////////////////////////////////////
+//////////////////////////////////////
 
 
 //system("mkdir /home/romoeoaxpuac/Escritorio/RebecaCaradeTortuca");
@@ -76,6 +72,6 @@ FILE *fp;
  	////
 
 
-        printf("Hola mundo");
+        printf("\nHola mundo");
         return 0;
 }
