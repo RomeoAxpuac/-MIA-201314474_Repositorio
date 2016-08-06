@@ -17,8 +17,18 @@ int main()
 /// aca van los parametros ///
 char archivo[]="/home/romoeoaxpuac/Escritorio/Discoxxxx.dsk";
 char archivo2[]="/home/romoeoaxpuac/Escritorio/Discoxxxx.dsk";
-int size = 101; // Tamaño del archivo
-char cad[] = " ";
+int size = 24; // Tamaño del archivo
+char tipo = 'c';
+
+if (tipo == 'K' || tipo == 'k'){
+    size = size * 1000;
+}
+if (tipo == 'M' || tipo == 'm' || tipo == 'c'){
+    size = size * 1000000;
+}
+
+if(size >0){
+
 char separador[] = "\/";
         char h [] = "";
         char * trozo;
@@ -46,7 +56,7 @@ char separador[] = "\/";
                     FILE *fpx2 = fopen(archivo2,"wb+");
                         int a= 0;
                         for(a;a<size;a++){
-                            fputs( cad, fpx2 );
+                            fputs( " ", fpx2 );
                         }
                     fclose((fpx2));
                     printf("Disco Creado Con Exito");
@@ -55,7 +65,11 @@ char separador[] = "\/";
 ///////////////////////////////////////
 ///////////////////////////////////////
 //////////////////////////////////////
+}
+else {
+    printf("El tamaño del archivo es incorrecto");
 
+}
 
 //system("mkdir /home/romoeoaxpuac/Escritorio/RebecaCaradeTortuca");
 FILE *fp;
@@ -66,7 +80,7 @@ FILE *fp;
 
  	int a= 0;
  	for(a;a<100;a++){
- 	fputs( cadena, fp );
+ 	fputs( " ", fp );
     }
  	fclose ( fp );
  	////
