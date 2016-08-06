@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <dirent.h>
 #include <string.h>
 
 
@@ -17,7 +18,7 @@ int main()
 /// aca van los parametros ///
 char archivo[]="/home/romoeoaxpuac/Escritorio/Discoxxxx.dsk";
 char archivo2[]="/home/romoeoaxpuac/Escritorio/Discoxxxx.dsk";
-char archivo3[] = "/home/romoeoaxpuac/Escritorio/Discoxxxx.dsk";
+char archivo3[] = "/home/romoeoaxpuac/Escritorio/Caperucita/Discoxxxx.dsk";
 int size = 24; // Tamaño del archivo
 char tipo = 'c';
 
@@ -47,11 +48,38 @@ char separador[] = "\/";
             puts("El Disco no se puede crear, el comando se encuentra en defecto");
         }else {
             //verificando existencia y creacion de directorios:D
-            char path [] = "/";
+            char path [] = "";
+            char *comando = "mkdir ";
+            char comando_completo[1200];
             char * trozo2;
-            trozo2 = strtok(archivo,"/");
-            strcat(path,trozo2);
-            puts(path);
+            trozo2 = strtok(archivo3,"/");
+            //strcat(path,trozo2);
+            puts("XXX");
+            while(trozo2 != NULL){
+
+                DIR * directorio;
+                struct dirent * vacio;
+                char *x = path;
+                directorio = opendir(path);
+                if(directorio){
+                    //puts("hola");
+                    closedir(directorio);
+                }else if(path != "" && strlen(path)>0){
+                    //strcat(comando,x);
+                    puts("puto");
+                    char *ax = path;
+                    strcpy(comando_completo, comando);
+                    strcpy(&comando_completo[ strlen(comando) ], ax);
+                    //puts(comando_completo);
+                    system(comando_completo);
+                    puts(path);
+                    puts("puto2");
+                }
+
+                strcat(path,"/");
+                strcat(path,trozo2);
+                trozo2 = strtok(NULL,"/");
+            }
 
 
             //CREAMOS EL OBJETO DE ARCHIVOS Y VEMOS SI NO HA SIDO CREADO CON anterioridad
