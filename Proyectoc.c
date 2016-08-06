@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <dirent.h>
 #include <string.h>
 
 
@@ -18,7 +17,7 @@ int main()
 /// aca van los parametros ///
 char archivo[]="/home/romoeoaxpuac/Escritorio/Discoxxxx.dsk";
 char archivo2[]="/home/romoeoaxpuac/Escritorio/Discoxxxx.dsk";
-char archivo3[]="/home/romoeoaxpuac/Escritorio/Discoxxxx.dsk";
+char archivo3[] = "/home/romoeoaxpuac/Escritorio/Discoxxxx.dsk";
 int size = 24; // Tamaño del archivo
 char tipo = 'c';
 
@@ -33,15 +32,12 @@ if(size >0){
 
 char separador[] = "\/";
         char h [] = "";
-        char h2 [] = "/";
-        char * trozo2;
         char * trozo;
         int valor = 0;
         trozo = strtok( archivo, separador);
 
         while( trozo != NULL ) {
         strcpy(h,trozo);
-        strcat(h2,h);
         //printf(h);
         //printf( "Trozo : %s \n", trozo);//<- buscando .dsk
         trozo = strtok( NULL, separador);
@@ -50,23 +46,15 @@ char separador[] = "\/";
         if ( (strstr(h,".dsk") == NULL) && (strstr(h,".DSK") == NULL) ){
             puts("El Disco no se puede crear, el comando se encuentra en defecto");
         }else {
+            //verificando existencia y creacion de directorios:D
+            char path [] = "/";
+            char * trozo2;
+            trozo2 = strtok(archivo,"/");
+            strcat(path,trozo2);
+            puts(path);
 
-            puts(h2);
 
-        /*
-
-                //verificamos la existencia del directorio
-                DIR * directorio;
-                struct dirent * vacio;
-                directorio = opendir("/home/romoeoaxpuac/Escritorio/PACK");
-                if(directorio){
-                    puts("hola");
-                    closedir(directorio);
-                }else{
-                    puts("adios");
-                }
-        */
-           //CREAMOS EL OBJETO DE ARCHIVOS Y VEMOS SI NO HA SIDO CREADO CON anterioridad
+            //CREAMOS EL OBJETO DE ARCHIVOS Y VEMOS SI NO HA SIDO CREADO CON anterioridad
             FILE *fpx = fopen(archivo2,"r");
                 if( fpx != NULL) {
                     printf("Error, El Disco Ya Existe");
