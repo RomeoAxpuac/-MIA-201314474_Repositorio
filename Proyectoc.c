@@ -5,7 +5,7 @@
 
 
 
-
+void creacion(char ruta [], int size, char tipo);
 
 int main()
 {
@@ -16,9 +16,10 @@ int main()
 //////////////////////////////////////
 // primero se tiene que tener el nombre del disco XD
 /// aca van los parametros ///
-char archivo[]="/home/romoeoaxpuac/Escritorio/Discoxxxx.dsk";
-char archivo2[]="/home/romoeoaxpuac/Escritorio/Discoxxxx.dsk";
-char archivo3[] = "/home/romoeoaxpuac/Escritorio/Caperucita/Discoxxxx.dsk";
+char archivo[]="/home/romoeoaxpuac/Escritorio/Caperucita/SoyLaMeraTos/Control/Discoxxxx.dsk";
+char archivo2[]="/home/romoeoaxpuac/Escritorio/Caperucita/SoyLaMeraTos/Control/Discoxxxx.dsk";
+char archivo3[] = "/home/romoeoaxpuac/Escritorio/Caperucita/SoyLaMeraTos/Control/Discoxxxx.dsk";
+char comando [1024] = "";
 int size = 24; // Tamaño del archivo
 char tipo = 'c';
 
@@ -29,7 +30,7 @@ if (tipo == 'M' || tipo == 'm' || tipo == 'c'){
     size = size * 1000000;
 }
 
-if(size >0){
+if(size >0 && size >= 10000000){
 
 char separador[] = "\/";
         char h [] = "";
@@ -49,31 +50,34 @@ char separador[] = "\/";
         }else {
             //verificando existencia y creacion de directorios:D
             char path [] = "";
-            char *comando = "mkdir ";
-            char comando_completo[1200];
             char * trozo2;
+
             trozo2 = strtok(archivo3,"/");
-            //strcat(path,trozo2);
-            puts("XXX");
             while(trozo2 != NULL){
 
                 DIR * directorio;
                 struct dirent * vacio;
                 char *x = path;
-                directorio = opendir(path);
+                directorio = opendir(x);
                 if(directorio){
                     //puts("hola");
                     closedir(directorio);
                 }else if(path != "" && strlen(path)>0){
-                    //strcat(comando,x);
-                    puts("puto");
-                    char *ax = path;
-                    strcpy(comando_completo, comando);
-                    strcpy(&comando_completo[ strlen(comando) ], ax);
-                    //puts(comando_completo);
-                    system(comando_completo);
-                    puts(path);
-                    puts("puto2");
+                    char *x = "mkdir ";
+                    char *y = path;
+
+                    //strcat(comando,"");
+                    //strcat(comando,"mkdir ");
+                    //printf(x);
+                    //printf(y);
+                    strcpy(comando,"");
+                    strcat(comando,x);
+                    strcat(comando,y);
+                    //printf(comando);
+                    //printf("\n");
+                    system(comando);
+                    //system(path);
+
                 }
 
                 strcat(path,"/");
@@ -125,4 +129,15 @@ FILE *fp;
 
         printf("\nHola mundo");
         return 0;
+}
+
+
+void creacion(char ruta [], int size, char tipo){
+
+
+
+
+
+
+
 }
