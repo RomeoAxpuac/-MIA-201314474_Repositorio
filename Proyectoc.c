@@ -8,13 +8,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+
+struct Particion{
+    char path[1024];
+    char unit ;
+    long int size;
+    char TDP;
+    char ajuste[1024];
+    char nombre[1024];
+    struct Particion*siguiente;
+};
+struct Particion*primera, *ultima;
+int numNodosP;
+int posP;
+void inicializaraParticion();
+void insertarParticion(char path[], char nombre[], char tipo,char Unidad,char ajuste[],long int tamanio);
+int buscarParticion(char path[],char nombre[]);
+void visualizarParticiones();
+int cantidadDeParticiones(char path[]);
+
 struct Archivo{
    char path[1024];
    int tamanio;
    char tipo;
    struct Archivo *siguiente;
 };
-
 struct Archivo *primero, *ultimo;
 int numNodos;
 int pos;
@@ -30,8 +49,13 @@ int main()
 {
 
     int op;
+    char nombreParticion[1024];
+
+
     long int nuevaparticion;
+    char unitparticion;
     inicializar();
+    inicializaraParticion();
     char Comando [] = "";
     char Comando2 [] = "ComandoParaCrearArchivo";
     char Comando3 [] = "";
@@ -40,13 +64,33 @@ int main()
         puts("\nPara salir Ingrese Salir");
         scanf("%s",&Comando);
         printf(Comando);
+        puts("nombre particion");
+        scanf("%s",&nombreParticion);
         puts("Ingrese Su comando:");
         scanf("%d", &op);
         char x [] = "/home/romoeoaxpuac/Escritorio/Carpeta1/Carpeta2/Discoxxxx.dsk";
         //strcpy(Comando,x);
         int size = 24; // Tamaño del archivo
         char tipo = 'c';
-        nuevaparticion= 3 * 1000000;
+
+        /// esto es para la parte del fdisk///
+        unitparticion = 'm';
+        nuevaparticion = 3;
+        char tipoParticion = "E";
+        char AjusteParticion[1024] = "BW";
+        ///strcpy(AjusteParticion,"BW");
+        //strcpy(nombreParticion,"Particion");
+                if( unitparticion == 'b' || unitparticion == 'b'){
+                    nuevaparticion = nuevaparticion;
+                }
+                if (unitparticion == 'K' || unitparticion == 'k' || unitparticion == 'c'){
+                    nuevaparticion = nuevaparticion* 1024;
+                    //unitparticion ='K';
+                }
+                if (unitparticion == 'M' || unitparticion == 'm'){
+                    nuevaparticion = nuevaparticion * 1048576;
+                }
+
         switch(op)
         {
             case 1: puts("");
@@ -75,10 +119,10 @@ int main()
 
 
                 if (tipo == 'K' || tipo == 'k'){
-                    size = size * 1000;
+                    size = size * 1024;
                 }
                 if (tipo == 'M' || tipo == 'm' || tipo == 'c'){
-                    size = size * 1000000;
+                    size = size * 1048576;
                 }
 
                 if(size >0 && size >= 10000000){
@@ -183,7 +227,7 @@ int main()
             //printf("El archivo si Existe\n");
              fseek( fpx, 0L, SEEK_END );
            // printf("%i",ftell(fpx));
-            if(ftell(fpx)>=10000000){
+            if(ftell(fpx)>=10000000 && nuevaparticion>2000000){
                 tamanio = ftell(fpx);
                 remove(Comando);
                 a = 1;
@@ -194,16 +238,22 @@ int main()
             fclose(fpx);
            }
            else{
-            printf("No se Puede Realizar la Partición Ya que el Archivo NO existe");
+            printf("No se Puede Realizar la Partición Ya que el Archivo NO existe\n");
            }
             //int xx= tamanioArchivo(Comando) - nuevaparticion;
-            if(a == 1){
+            if(a == 1 && (buscarParticion(Comando,nombreParticion)==0)){
                 fpx = fopen(Comando,"wr+");
                 //printf("%i",nuevo);
                 for(int x = 0; x<(tamanio - nuevaparticion);x++){
                     fputs( " ", fpx );
                 }
+                printf("Particion Realizada Con Exito\n");
                 fclose(fpx);
+                //insertarParticion(Comando,nombreParticion,tipoParticion,unitparticion,AjusteParticion,nuevaparticion);
+                //
+                insertarParticion(Comando,nombreParticion,tipoParticion,unitparticion,AjusteParticion,nuevaparticion);
+            }else{
+                printf("Esta Partición Ya Ha sido Creada\n");
             }
 
 
@@ -214,7 +264,7 @@ int main()
             visualizar();
         break;
         case 6:
-            buscar(Comando);
+            visualizarParticiones();
 
         break;
             case 4: break;
@@ -354,8 +404,7 @@ struct Archivo *aux;
        printf("\n LISTA VACIA");
 }
 
-  void buscar(char path [] )
-   {
+  void buscar(char path [] )   {
 
      struct Archivo *aux;
      pos=0;
@@ -421,6 +470,104 @@ struct Archivo *aux;
 
 }
 
+void inicializaraParticion(){
+    primera = NULL;
+    ultima = NULL;
+}
+void insertarParticion(char path[], char nombre[], char tipo,char Unidad,char ajuste[],long int tamanio){
+ struct Particion *nuevo;
+    nuevo=( struct Particion*)malloc(sizeof(struct Particion));
+    if(nuevo==NULL)
+         printf("\n MEMORIA INSUFICIENTE\n");
 
+     else
+     {
+        strcpy(nuevo->path,path);
+        strcpy(nuevo->nombre,nombre);
+         nuevo->TDP = tipo;
+         nuevo->unit=Unidad;
+        strcpy(nuevo->ajuste,ajuste);
+        nuevo->size = tamanio;
+         if(primera==NULL)
+           {
+            primera=nuevo;
+            ultima=nuevo;
+
+         }else{
+
+           ultima->siguiente=nuevo;
+           ultima=nuevo;
+              }
+       }
+       numNodosP++;
+
+
+
+}
+int buscarParticion(char path[],char nombre[]){
+struct Particion *aux;
+     posP=0;
+     aux=primera;
+     while(posP<numNodosP)
+       {
+          //printf(" %d.- ", pos+1);
+          //printf(" %s\n", aux->path);
+          if((strcmp(path, aux->path)==0) && ( strcmp(nombre,aux->nombre)==0))
+                    {
+                      //printf("\n %s EXISTE", aux );
+                      return 1;
+                      //v = 1;
+                   }
+
+          aux= aux->siguiente;
+          posP++;
+       }
+
+return 0;
+}
+void visualizarParticiones(){
+struct Particion *aux;
+
+     posP=0;
+
+     aux=primera;
+
+     while(posP<numNodosP)
+       {
+          printf(" %d.- ", posP+1);
+
+          printf(" %s\n", aux->path);
+          printf(" %s\n", aux->nombre);
+
+          aux= aux->siguiente;
+
+          posP++;
+       }
+
+
+}
+int cantidadDeParticiones(char path[]){
+struct Particion *aux;
+     posP=0;
+     aux=primero;
+     int a = 0;
+     while(posP<numNodosP)
+       {
+          //printf(" %d.- ", pos+1);
+          //printf(" %s\n", aux->path);
+          if((strcmp(path, aux->path)==0) )
+                    {
+                        a++;
+                      //v = 1;
+                   }
+
+          aux= aux->siguiente;
+          pos++;
+       }
+
+return a;
+
+
+}
 
 
