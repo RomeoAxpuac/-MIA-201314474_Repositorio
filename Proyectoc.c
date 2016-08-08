@@ -24,11 +24,13 @@ void buscar(char path[]);
 void eliminar(char path[]);
 void visualizar();
 void creacion(char archivo [], char archivo2 [],char archivo3 [],int size, char tipo);
-
+int tamanioArchivo(char archivo[]);
+void modificarTamanio(char archivo[],int tamanio);
 int main()
 {
 
     int op;
+    long int nuevaparticion;
     inicializar();
     char Comando [] = "";
     char Comando2 [] = "ComandoParaCrearArchivo";
@@ -44,7 +46,7 @@ int main()
         //strcpy(Comando,x);
         int size = 24; // Tamaño del archivo
         char tipo = 'c';
-
+        nuevaparticion= 3 * 1000000;
         switch(op)
         {
             case 1: puts("");
@@ -81,7 +83,7 @@ int main()
 
                 if(size >0 && size >= 10000000){
 
-                    char separador[] = "\/";
+                    char separador[] = "/";
                     char h [] = "";
                     char * trozo;
                     int valor = 0;
@@ -172,15 +174,41 @@ int main()
 
         case 3:
             puts("");
-            FILE *fpx = fopen(Comando,"r");
-                    if( fpx != NULL) {
-                        printf("El Archivo si Existe");
-                        fclose(fpx);
-                    }
-                //si el archivo no existe pos lo creamos
-                    else {
-                        puts("No se puede Realizar la Partición ya que el Archivo No Existe");
-                    }
+
+            int a;
+            long int tamanio;
+           FILE *fpx = fopen(Comando,"r");
+
+           if(fpx != NULL){
+            //printf("El archivo si Existe\n");
+             fseek( fpx, 0L, SEEK_END );
+           // printf("%i",ftell(fpx));
+            if(ftell(fpx)>=10000000){
+                tamanio = ftell(fpx);
+                remove(Comando);
+                a = 1;
+            }else{
+                printf("DISCO MUY PEQUEÑO\n");
+            }
+              fseek( fpx, 0L, SEEK_SET );
+            fclose(fpx);
+           }
+           else{
+            printf("No se Puede Realizar la Partición Ya que el Archivo NO existe");
+           }
+            //int xx= tamanioArchivo(Comando) - nuevaparticion;
+            if(a == 1){
+                fpx = fopen(Comando,"wr+");
+                //printf("%i",nuevo);
+                for(int x = 0; x<(tamanio - nuevaparticion);x++){
+                    fputs( " ", fpx );
+                }
+                fclose(fpx);
+            }
+
+
+
+
         break;
         case 5:
             visualizar();
@@ -351,6 +379,48 @@ struct Archivo *aux;
 
 
 }
+
+int tamanioArchivo(char archivo[]){
+struct Archivo *aux;
+     pos=0;
+     aux=primero;
+     while(pos<numNodos)
+       {
+          printf(" %d.- ", pos+1);
+          printf(" %s\n", aux->path);
+          if(strcmp(archivo, aux->path)==0)
+                    {
+                      //printf("\n %s EXISTE", aux );
+                      return aux->tamanio;
+                      //v = 1;
+                   }
+
+          aux= aux->siguiente;
+          pos++;
+       }
+return 0;
+}
+void modificarTamanio(char archivo[],int tamanio){
+struct Archivo *aux;
+     pos=0;
+     aux=primero;
+     while(pos<numNodos)
+       {
+          printf(" %d.- ", pos+1);
+          printf(" %s\n", aux->path);
+          if(strcmp(archivo, aux->path)==0)
+                    {
+                      //printf("\n %s EXISTE", aux );
+                    aux->tamanio = tamanio;
+                      //v = 1;
+                   }
+
+          aux= aux->siguiente;
+          pos++;
+       }
+
+}
+
 
 
 
