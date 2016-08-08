@@ -4,36 +4,56 @@
 #include <string.h>
 
 
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+struct Archivo{
+   char path[1024];
+   int tamanio;
+   char tipo;
+   struct Archivo *siguiente;
+};
+
+struct Archivo *primero, *ultimo;
+int numNodos;
+int pos;
+void inicializar();
+void insertar_ultimo(char path[],int tamanio, char tipo);
+void buscar(char path[]);
+void eliminar(char path[]);
+void visualizar();
 void creacion(char archivo [], char archivo2 [],char archivo3 [],int size, char tipo);
 
 int main()
 {
 
     int op;
+    inicializar();
     char Comando [] = "";
     char Comando2 [] = "ComandoParaCrearArchivo";
     char Comando3 [] = "";
     while(op!=4)
     {
-        printf("Para salir Ingrese Salir\n");
+        puts("\nPara salir Ingrese Salir");
         scanf("%s",&Comando);
         printf(Comando);
-        printf("\n");
-        printf("Ingrese Su comando:");
+        puts("Ingrese Su comando:");
         scanf("%d", &op);
         char x [] = "/home/romoeoaxpuac/Escritorio/Carpeta1/Carpeta2/Discoxxxx.dsk";
-        strcpy(Comando,x);
+        //strcpy(Comando,x);
+        int size = 24; // Tamaño del archivo
+        char tipo = 'c';
 
         switch(op)
         {
-            case 1: puts(Comando);
+            case 1: puts("");
                 //verificando el metodo de creacion
                 ///////////////////////////////////////
                 ///////////////////////////////////////
                 //////////////////////////////////////
                 // primero se tiene que tener el nombre del disco XD
                  //puts(Comando);
-                /// aca van los parametros ///
                 char archivo[]= "/home/romoeoaxpuac/Escritorio/Caperucita/SoyLaMeraTos/Control/Discoxxxx.dsk";
                 //puts(Comando);
                 char archivo2[] = "/home/romoeoaxpuac/Escritorio/Caperucita/SoyLaMeraTos/Control/Discoxxxx.dsk";
@@ -50,8 +70,7 @@ int main()
              //   puts("---");
                 char comando [1024] = "";
 
-                int size = 24; // Tamaño del archivo
-                char tipo = 'c';
+
 
                 if (tipo == 'K' || tipo == 'k'){
                     size = size * 1000;
@@ -95,7 +114,7 @@ int main()
                             }else if(path != "" && strlen(path)>0){
                                 char *x = "mkdir ";
                                 char *y = path;
-
+                                //puts("VAmos Bien");
                                 //strcat(comando,"");
                                 //strcat(comando,"mkdir ");
                                 //printf(x);
@@ -131,6 +150,7 @@ int main()
                             fputs( " ", fpx2 );
                         }
                         fclose((fpx2));
+                        insertar_ultimo(archivo2,size,tipo);
                         printf("Disco Creado Con Exito");
                     }
             }
@@ -141,6 +161,33 @@ int main()
         else {
             printf("El tamaño del archivo es incorrecto");
         }
+        break;
+        case 2:
+            if(remove(Comando)==0) // Eliminamos el archivo
+                printf("El archivo fue eliminado satisfactoriamente\n");
+            else
+                printf("No se pudo eliminar el archivo\n");
+
+        break;
+
+        case 3:
+            puts("");
+            FILE *fpx = fopen(Comando,"r");
+                    if( fpx != NULL) {
+                        printf("El Archivo si Existe");
+                        fclose(fpx);
+                    }
+                //si el archivo no existe pos lo creamos
+                    else {
+                        puts("No se puede Realizar la Partición ya que el Archivo No Existe");
+                    }
+        break;
+        case 5:
+            visualizar();
+        break;
+        case 6:
+            buscar(Comando);
+
         break;
             case 4: break;
         }
@@ -220,3 +267,95 @@ else {
 }
 
 }
+
+void inicializar(){
+      primero=NULL;
+      ultimo=NULL;
+}
+void insertar_ultimo(char path[],int tamanio, char tipo){
+    struct Archivo *nuevo;
+    nuevo=( struct Archivo*)malloc(sizeof(struct Archivo));
+    if(nuevo==NULL)
+
+         printf("\n MEMORIA INSUFICIENTE\n");
+
+     else
+     {
+        strcpy(nuevo->path,path);
+        nuevo->tamanio = tamanio;
+        nuevo->tipo = tipo;
+        nuevo->siguiente=NULL;
+         if(primero==NULL)
+           {
+            primero=nuevo;
+
+            ultimo=nuevo;
+
+         }else{
+
+           ultimo->siguiente=nuevo;
+
+           ultimo=nuevo;
+              }
+       }
+       numNodos++;
+
+    }
+
+
+void visualizar(){
+
+struct Archivo *aux;
+
+     pos=0;
+
+     aux=primero;
+
+     while(pos<numNodos)
+       {
+          printf(" %d.- ", pos+1);
+
+          printf(" %s\n", aux->path);
+
+          aux= aux->siguiente;
+
+          pos++;
+       }
+
+    if(numNodos==0)
+       printf("\n LISTA VACIA");
+}
+
+  void buscar(char path [] )
+   {
+     struct Archivo *actual;
+     char aux [1024];
+     int p = 1;
+     int v = 0;
+     puts("vamos Bien");
+     actual=( struct Archivo*)malloc(sizeof( struct Archivo));
+     if(actual==NULL)
+       printf("MEMORIA INSUFICIENTE\n");
+     else{
+        strcpy(aux,path);
+        while (p <= numNodos)
+            {
+            printf("%s",actual->path);
+            if(strcmp(aux, actual->path)==0)
+                    {
+                      printf("\n %sEXISTE", aux );
+
+                      v = 1;
+                   }
+                      p++;
+
+                      actual = actual->siguiente;
+           }
+   if (v==0)
+     printf("\n%sNO EXISTE", aux );
+        }
+
+  }
+
+
+
