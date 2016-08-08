@@ -328,34 +328,29 @@ struct Archivo *aux;
 
   void buscar(char path [] )
    {
-     struct Archivo *actual;
-     char aux [1024];
-     int p = 1;
-     int v = 0;
-     puts("vamos Bien");
-     actual=( struct Archivo*)malloc(sizeof( struct Archivo));
-     if(actual==NULL)
-       printf("MEMORIA INSUFICIENTE\n");
-     else{
-        strcpy(aux,path);
-        while (p <= numNodos)
-            {
-            printf("%s",actual->path);
-            if(strcmp(aux, actual->path)==0)
+
+     struct Archivo *aux;
+     pos=0;
+     aux=primero;
+     while(pos<numNodos)
+       {
+          printf(" %d.- ", pos+1);
+          printf(" %s\n", aux->path);
+          if(strcmp(path, aux->path)==0)
                     {
-                      printf("\n %sEXISTE", aux );
-
-                      v = 1;
+                      printf("\n %s EXISTE", aux );
+                      //v = 1;
                    }
-                      p++;
 
-                      actual = actual->siguiente;
-           }
-   if (v==0)
-     printf("\n%sNO EXISTE", aux );
-        }
+          aux= aux->siguiente;
+          pos++;
+       }
 
-  }
+    if(numNodos==0)
+       printf("\n LISTA VACIA");
+
+
+}
 
 
 
