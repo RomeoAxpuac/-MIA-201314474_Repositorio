@@ -5,11 +5,6 @@
 
 
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-
 struct Particion{
     char path[1024];
     char unit ;
@@ -30,6 +25,9 @@ int cantidadDeParticiones(char path[]);
 int cantidadDeParicionesLogicas(char path[]);
 int cantidadDeParticionesPrimarias(char path[]);
 long int tamanioExtendida(char path[]);
+void primerAjuste(char path[],char nombreParticion[],long int tamanio);
+void MejorAjuste(char path[],char nombreParticion[],long int tamanio);
+void PeorAjuste(char path[],char nombreParticion[],long int tamanio);
 void cambiandoTamanioExtendida(char path [], long int tamanio);
 
 struct Archivo{
@@ -86,7 +84,7 @@ int main()
         nuevaparticion = 3;
         long int tamaniologico = 1000000;
         //tipoParticion = 'e';
-        char AjusteParticion[1024] = "BW";
+        char AjusteParticion[1024] = "BF";
         ///strcpy(AjusteParticion,"BW");
         //strcpy(nombreParticion,"Particion");
                 if( unitparticion == 'b' || unitparticion == 'b'){
@@ -246,7 +244,13 @@ int main()
                     //printf("\n");
                     cambiandoTamanioExtendida(Comando,tamanioExtendida(Comando)-tamaniologico);
                     insertarParticion(Comando,nombreParticion,tipoParticion,unitparticion,AjusteParticion,tamaniologico);
-                    printf("PARTICAION LOGICA CREADA CON EXITO \N");
+                    printf("PARTICAION LOGICA CREADA CON EXITO \n");
+                    if(strcmp(AjusteParticion,"BF")==0){printf("Se Utilizo EL MEJOR AJUSTE \n");}if(strcmp(AjusteParticion,"FF")==0){printf("Se Utilizo EL PRIMER AJUSTE \n");}
+                    if(strcmp(AjusteParticion,"WF")==0){printf("Se Utilizo EL PEOR AJUSTE \n");}
+                   //pntf("%i ", tamanioExtendida(Comando));
+                    //printf("%i ", tamaniologico);
+                    //printf("%i ", tamanioExtendida(Comando)-tamaniologico);
+                    //printf("\n");l
 
                 }else{
                     printf("NO SE HA CREADO UNA PARTICIÓN EXTENDIDA PARA ESTE DISCO\n");
@@ -698,4 +702,95 @@ void cambiandoTamanioExtendida(char path [], long int tamanio){
 
 }
 
+void primerAjuste(char path[],char nombreParticion[],long int tamanio){
+struct Particion *aux2;
+     posP=0;
+     aux2=primera;
+
+struct Archivo *aux;
+     pos=0;
+     aux=primero;
+     while(pos<numNodos)
+       {
+        if(strcmp(aux->path,path) == 0 ){
+            printf("Se Utilizo El Primero Ajuste\n");
+            aux->tamanio = -1;
+        }
+         while(posP<numNodosP)
+            {
+                aux2= aux2->siguiente;
+                posP++;
+            }
+        if(aux->tamanio>tamanio){
+            //printf("Espacio Disponible\n");
+            insertarParticion(path,nombreParticion,'c','k','FF',tamanio);
+        }
+          aux= aux->siguiente;
+          pos++;
+       }
+
+}
+void MejorAjuste(char path[],char nombreParticion[],long int tamanio){
+struct Particion *aux2;
+     posP=0;
+     aux2=primera;
+
+struct Archivo *aux;
+     pos=0;
+     aux=primero;
+     char a = 'c';
+     char b= 'k';
+     while(pos<numNodos)
+       {
+        if(strcmp(aux->path,path) == 0 ){
+            printf("Se Utilizo El Primero Ajuste\n");
+            aux->tamanio = -1;
+            //primero vamsos a comprar el tamño del arhiciv
+            //luevo camos a ir agrandando las particones onde se deben colorcar
+            // y listo se agregar
+            //primero vamsos a comprar el tamño del arhiciv
+            //luevo camos a ir agrandando las particones onde se deben colorcar
+            // y listo se agregar
+            while(aux->tamanio>tamanio){
+                insertarParticion(path,nombreParticion,b,a,"BF",tamanio);
+            }
+        }
+
+          aux= aux->siguiente;
+          pos++;
+       }
+
+}
+void PeorAjuste(char path[],char nombreParticion[],long int tamanio){
+struct Particion *aux2;
+     posP=0;
+     aux2=primera;
+
+struct Archivo *aux;
+     pos=0;
+     aux=primero;
+     char a = 'c';
+     char b= 'k';
+     while(pos<numNodos)
+       {
+        if(strcmp(aux->path,path) == 0 ){
+            printf("Se Utilizo El Primero Ajuste\n");
+            aux->tamanio = -1;
+            //primero vamsos a comprar el tamño del arhiciv
+            //luevo camos a ir agrandando las particones onde se deben colorcar
+            // y listo se agregar
+            //primero vamsos a comprar el tamño del arhiciv
+            //luevo camos a ir agrandando las particones onde se deben colorcar
+            // y listo se agregar
+            while(aux->tamanio>tamanio){
+                insertarParticion(path,nombreParticion,b,a,"BF",tamanio);
+            }
+        }
+
+          aux= aux->siguiente;
+          pos++;
+       }
+
+
+}
 
