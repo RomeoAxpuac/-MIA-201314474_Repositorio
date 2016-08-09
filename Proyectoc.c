@@ -29,6 +29,8 @@ void visualizarParticiones();
 int cantidadDeParticiones(char path[]);
 int cantidadDeParicionesLogicas(char path[]);
 int cantidadDeParticionesPrimarias(char path[]);
+long int tamanioExtendida(char path[]);
+void cambiandoTamanioExtendida(char path [], long int tamanio);
 
 struct Archivo{
    char path[1024];
@@ -82,6 +84,7 @@ int main()
         /// esto es para la parte del fdisk///
         unitparticion = 'm';
         nuevaparticion = 3;
+        long int tamaniologico = 1000000;
         //tipoParticion = 'e';
         char AjusteParticion[1024] = "BW";
         ///strcpy(AjusteParticion,"BW");
@@ -235,6 +238,21 @@ int main()
              fseek( fpx, 0L, SEEK_END );
            // printf("%i",ftell(fpx));
             //printf("%i",cantidadDeParticiones(Comando));
+            if(tipoParticion == 'l'|| tipoParticion == 'L'){
+                if((cantidadDeParicionesLogicas(Comando) == 1)&& tamanioExtendida(Comando)>tamaniologico){
+                    //printf("%i ", tamanioExtendida(Comando));
+                    //printf("%i ", tamaniologico);
+                    //printf("%i ", tamanioExtendida(Comando)-tamaniologico);
+                    //printf("\n");
+                    cambiandoTamanioExtendida(Comando,tamanioExtendida(Comando)-tamaniologico);
+                    insertarParticion(Comando,nombreParticion,tipoParticion,unitparticion,AjusteParticion,tamaniologico);
+                    printf("PARTICAION LOGICA CREADA CON EXITO \N");
+
+                }else{
+                    printf("NO SE HA CREADO UNA PARTICIÓN EXTENDIDA PARA ESTE DISCO\n");
+                }
+            }
+
             if(ftell(fpx)>=10000000 && nuevaparticion>2000000 && (buscarParticion(Comando,nombreParticion)==0) &&(cantidadDeParticiones(Comando)+1<=4) && (tipoParticion != 'L'|| tipoParticion != 'l')&&(cantidadDeParicionesLogicas(Comando)!=1)   ){
                 tamanio = ftell(fpx);
                 remove(Comando);
@@ -244,7 +262,10 @@ int main()
                 remove(Comando);
                 a = 1;
             }
-            else{
+            else {
+                if(tipoParticion == 'l'|| tipoParticion == 'L'){
+                }
+                else
                 printf("Disco Pequeño, Partición Repetido, Particiones a Tope\n");
                 a = 0;
             }
@@ -578,7 +599,7 @@ struct Particion *aux;
        {
           //printf(" %d.- ", pos+1);
           //printf(" %s\n", aux->path);
-          if((strcmp(path, aux->path)==0) )
+          if((strcmp(path, aux->path)==0) && (aux->TDP!= 'L'||aux->TDP != 'l')  )
                     {
                         a++;
                       //v = 1;
@@ -636,5 +657,45 @@ return a;
 
 }
 
+
+long int tamanioExtendida(char path[]){
+struct Particion *aux;
+     posP=0;
+     aux=primera;
+     while(posP<numNodosP)
+       {
+          //printf(" %d.- ", pos+1);
+          //printf(" %s\n", aux->path);
+          if( aux->TDP == 'E' || aux->TDP == 'e')
+                    {
+                        return aux->size;
+                      //v = 1;
+                   }
+
+          aux= aux->siguiente;
+          posP++;
+       }
+
+return 0;
+
+}
+void cambiandoTamanioExtendida(char path [], long int tamanio){
+    struct Particion *aux;
+     posP=0;
+     aux=primera;
+     while(posP<numNodosP)
+       {
+          //printf(" %d.- ", pos+1);
+          //printf(" %s\n", aux->path);
+          if( strcmp(path,aux->path) == 0)
+                    {
+                    aux->size = tamanio;
+                   }
+
+          aux= aux->siguiente;
+          posP++;
+       }
+
+}
 
 
