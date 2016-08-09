@@ -27,6 +27,8 @@ void insertarParticion(char path[], char nombre[], char tipo,char Unidad,char aj
 int buscarParticion(char path[],char nombre[]);
 void visualizarParticiones();
 int cantidadDeParticiones(char path[]);
+int cantidadDeParicionesLogicas(char path[]);
+int cantidadDeParticionesPrimarias(char path[]);
 
 struct Archivo{
    char path[1024];
@@ -59,14 +61,18 @@ int main()
     char Comando [] = "";
     char Comando2 [] = "ComandoParaCrearArchivo";
     char Comando3 [] = "";
+    char tipoParticion;
     while(op!=4)
     {
+
         puts("\nPara salir Ingrese Salir");
         scanf("%s",&Comando);
         printf(Comando);
-        puts("nombre particion");
+        puts("\nnombre particion");
         scanf("%s",&nombreParticion);
-        puts("Ingrese Su comando:");
+        puts("\nIngrese el tipo de Particion");
+        scanf("%s",&tipoParticion);
+        puts("\nIngrese Su comando:");
         scanf("%d", &op);
         char x [] = "/home/romoeoaxpuac/Escritorio/Carpeta1/Carpeta2/Discoxxxx.dsk";
         //strcpy(Comando,x);
@@ -76,7 +82,7 @@ int main()
         /// esto es para la parte del fdisk///
         unitparticion = 'm';
         nuevaparticion = 3;
-        char tipoParticion = "E";
+        //tipoParticion = 'e';
         char AjusteParticion[1024] = "BW";
         ///strcpy(AjusteParticion,"BW");
         //strcpy(nombreParticion,"Particion");
@@ -221,27 +227,36 @@ int main()
 
             int a;
             long int tamanio;
+            //printf("%i\n",cantidadDeParicionesLogicas(Comando));
            FILE *fpx = fopen(Comando,"r");
 
            if(fpx != NULL){
             //printf("El archivo si Existe\n");
              fseek( fpx, 0L, SEEK_END );
            // printf("%i",ftell(fpx));
-            if(ftell(fpx)>=10000000 && nuevaparticion>2000000){
+            //printf("%i",cantidadDeParticiones(Comando));
+            if(ftell(fpx)>=10000000 && nuevaparticion>2000000 && (buscarParticion(Comando,nombreParticion)==0) &&(cantidadDeParticiones(Comando)+1<=4) && (tipoParticion != 'L'|| tipoParticion != 'l')&&(cantidadDeParicionesLogicas(Comando)!=1)   ){
                 tamanio = ftell(fpx);
                 remove(Comando);
                 a = 1;
-            }else{
-                printf("DISCO MUY PEQUEÑO\n");
+            }else if(cantidadDeParicionesLogicas(Comando)== 1 && (tipoParticion == 'P'|| tipoParticion == 'p') ){
+                tamanio = ftell(fpx);
+                remove(Comando);
+                a = 1;
+            }
+            else{
+                printf("Disco Pequeño, Partición Repetido, Particiones a Tope\n");
+                a = 0;
             }
               fseek( fpx, 0L, SEEK_SET );
             fclose(fpx);
            }
            else{
-            printf("No se Puede Realizar la Partición Ya que el Archivo NO existe\n");
+            printf("No se Puede Realizar la Partición Ya que el Archivo NO existe o a Excedido el número de Particiones\n");
+            a = 0;//printf("No se Puede Realizar la Partición, a Excedido el número de Particiones");
            }
             //int xx= tamanioArchivo(Comando) - nuevaparticion;
-            if(a == 1 && (buscarParticion(Comando,nombreParticion)==0)){
+            if(a == 1){
                 fpx = fopen(Comando,"wr+");
                 //printf("%i",nuevo);
                 for(int x = 0; x<(tamanio - nuevaparticion);x++){
@@ -252,8 +267,6 @@ int main()
                 //insertarParticion(Comando,nombreParticion,tipoParticion,unitparticion,AjusteParticion,nuevaparticion);
                 //
                 insertarParticion(Comando,nombreParticion,tipoParticion,unitparticion,AjusteParticion,nuevaparticion);
-            }else{
-                printf("Esta Partición Ya Ha sido Creada\n");
             }
 
 
@@ -535,10 +548,20 @@ struct Particion *aux;
      while(posP<numNodosP)
        {
           printf(" %d.- ", posP+1);
-
-          printf(" %s\n", aux->path);
-          printf(" %s\n", aux->nombre);
-
+          printf("DISCO ");
+          printf("%s", aux->path);
+          printf(" PARTICION ");
+          printf("%s ", aux->nombre);
+          printf(" TIPO ");
+          if(aux->TDP == 'E' || aux->TDP == 'e')
+            printf("%s ","Extendida");
+          if(aux->TDP == 'P' || aux->TDP =='p')
+            printf("%s ","Primaria");
+          if(aux->TDP == 'l' || aux->TDP=='L')
+            printf("%s ","Logica");
+          printf(" TAMANIO ");
+          printf("%i bytes",aux->size);
+          printf("\n");
           aux= aux->siguiente;
 
           posP++;
@@ -549,7 +572,7 @@ struct Particion *aux;
 int cantidadDeParticiones(char path[]){
 struct Particion *aux;
      posP=0;
-     aux=primero;
+     aux=primera;
      int a = 0;
      while(posP<numNodosP)
        {
@@ -562,12 +585,56 @@ struct Particion *aux;
                    }
 
           aux= aux->siguiente;
-          pos++;
+          posP++;
        }
 
 return a;
 
 
 }
+int cantidadDeParicionesLogicas(char path[]){
+struct Particion *aux;
+     posP=0;
+     aux=primera;
+     while(posP<numNodosP)
+       {
+          //printf(" %d.- ", pos+1);
+          //printf(" %s\n", aux->path);
+          if( aux->TDP == 'E' || aux->TDP == 'e')
+                    {
+                        return 1;
+                      //v = 1;
+                   }
+
+          aux= aux->siguiente;
+          posP++;
+       }
+
+return 0;
+
+}
+int cantidadDeParticionesPrimarias(char path[]){
+struct Particion *aux;
+     posP=0;
+     aux=primera;
+     int a = 0;
+     while(posP<numNodosP)
+       {
+          //printf(" %d.- ", pos+1);
+          //printf(" %s\n", aux->path);
+          if( aux->TDP == 'E' || aux->TDP == 'e')
+                    {
+                        a++;
+                      //v = 1;
+                   }
+
+          aux= aux->siguiente;
+          posP++;
+       }
+
+return a;
+
+}
+
 
 
