@@ -29,6 +29,7 @@ void primerAjuste(char path[],char nombreParticion[],long int tamanio);
 void MejorAjuste(char path[],char nombreParticion[],long int tamanio);
 void PeorAjuste(char path[],char nombreParticion[],long int tamanio);
 void cambiandoTamanioExtendida(char path [], long int tamanio);
+long int tamanioDeParticion(char path [], char nombreParticion[]);
 int VericiandoParticion(char path [], char nombreParticion[]);
 struct Archivo{
    char path[1024];
@@ -47,7 +48,7 @@ void eliminar(char path[]);
 void visualizar();
 void creacion(char archivo [], char archivo2 [],char archivo3 [],int size, char tipo);
 int tamanioArchivo(char archivo[]);
-void modificarTamanio(char archivo[],int tamanio);
+void cambiarTamanioParticion(char Archivo[], char nombre[] ,long int tamanio);
 int main()
 {
 
@@ -305,7 +306,10 @@ int main()
         break;
         case 5:
             //aca es para añadir tamaño a las particiones :D
-            if(VericiandoParticion(Comando,nombreParticion) == 1){
+                puts("");
+                int valor = 0;
+                long int tamanios;
+                if(VericiandoParticion(Comando,nombreParticion) == 1){
                 //printf("AGregando\n");
                 FILE *fp;
                 fp = fopen(Comando,"r");
@@ -313,15 +317,43 @@ int main()
                 fseek(fp, 0L, SEEK_END);
                 //printf("test.c ocupa %d bytes", ftell(fich)); 10000000
                 if( AderirTamannio > 0 && ftell(fp)>=AderirTamannio){
-                    printf("SI SE PUEDE\n");
-
+                    tamanios = ftell(fp);
+                    valor = 1;
+                    //printf("SI SE PUEDE\n");
+                    cambiarTamanioParticion(Comando,nombreParticion,AderirTamannio);
+                    remove(Comando);
+                }else if(AderirTamannio<0 && (tamanioDeParticion(Comando,nombreParticion)>(AderirTamannio*-1))){//) && VericiandoParticion(Comando,nombreParticion)>=(AderirTamannio*-1)){
+                    //printf("%i\n",tamanioDeParticion(Comando,nombreParticion));
+                    //printf("%i\n",AderirTamannio);
+                    tamanios=ftell(fp);
+                    valor = 2;
+                    cambiarTamanioParticion(Comando,nombreParticion,AderirTamannio);
+                     remove(Comando);
                 }
                 else{
                     printf("NO SE PUEDE AUMENTAR O DISMINUIR LA PARTICION, DISCO PEQUEÑO \n");
                 }
 
                 fclose ( fp );
+                if(valor == 1){
+                    fp = fopen(Comando,"wr+");
+                //printf("%i",nuevo);
+                    for(int x = 0; x<(tamanios - AderirTamannio);x++){
+                        fputs( " ", fp);
+                    }
+                    printf("SE REDUJO EL TAMAÑO DEL DISCO\n");
+                    fclose(fp);
+                }
+                if(valor == 2){
+                    fp = fopen(Comando,"wr+");
+                //printf("%i",nuevo);
+                    for(int x = 0; x<(tamanios - AderirTamannio);x++){
+                        fputs( " ", fp);
+                    }
+                    printf("SE AUMENTO EL TAMAÑO DEL DISCO\n");
+                    fclose(fp);
 
+                }
             }else{
                 printf("NO SE PUDO AGREGAR Y/O REDUCIR TAMAÑO\n");
 
@@ -829,12 +861,9 @@ struct Particion *aux;
      while(posP<numNodosP)
        {
           if(strcmp(aux->path,path)==0 && strcmp(aux->nombre,nombreParticion)==0){
-                if(aux->TDP!= 'l'&& aux->TDP !='L'){
-                    //printf("%s ",aux->path);
-                    //printf("%s ",aux->nombre);
-                    //printf("%c ",aux->TDP);
+                    if(aux->TDP!= 'l' && aux->TDP != 'L')
                     return 1;
-                }
+
 
           }
           aux= aux->siguiente;
@@ -844,4 +873,63 @@ struct Particion *aux;
 
 
 return 0;
+}
+
+long int tamanioDeParticion(char path [], char nombreParticion[]){
+struct Particion *aux;
+
+     posP=0;
+
+     aux=primera;
+
+     while(posP<numNodosP)
+       {
+          if(strcmp(aux->path,path)==0 && strcmp(aux->nombre,nombreParticion)==0){
+                    //printf("%i\n",aux->size);
+                    return aux->size;
+
+
+          }
+          aux= aux->siguiente;
+
+          posP++;
+       }
+
+
+return 0;
+
+
+
+}
+void cambiarTamanioParticion(char Archivo[], char nombre[] ,long int tamanio){
+
+struct Particion *aux;
+
+     posP=0;
+    long int a;
+     aux=primera;
+
+     while(posP<numNodosP)
+       {
+          if(strcmp(aux->path,Archivo)==0 && strcmp(aux->nombre,nombre)==0){
+                a = aux->size + tamanio;
+                if(tamanio>0){
+                    aux->size = aux->size + tamanio;
+                }
+                else if(tamanio<0 && (a >=0)){
+                    //printf("%i\n",a);
+                    aux->size = aux->size + tamanio;
+                }
+                else{
+                    printf("EL TAMAÑO DE LA PARTICIÓN NO ES SUFICIENTE\n");
+                }
+          }
+          aux= aux->siguiente;
+
+          posP++;
+       }
+
+
+
+
 }
