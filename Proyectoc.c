@@ -53,6 +53,8 @@ void visualizar();
 void creacion(char archivo [], char archivo2 [],char archivo3 [],int size, char tipo);
 int tamanioArchivo(char archivo[]);
 void cambiarTamanioParticion(char Archivo[], char nombre[] ,long int tamanio);
+long int EliminarParticion(char Archivo[],char nombre[]);
+long int EliminarParticionLogica(char Archivo[], char nombre[]);
 int main()
 {
 
@@ -93,7 +95,7 @@ int main()
         char AjusteParticion[1024] = "BF";
         int AderirTamannio = 2;
          /// para el delelte
-         char modo [1024] = "fast";
+         char modo [1024] = "full";
          //char modo [10] = "full";
         ///strcpy(AjusteParticion,"BW");
         //strcpy(nombreParticion,"Particion");
@@ -371,6 +373,7 @@ int main()
 
         break;
         case 7:
+            /// para la parte del fast
             if(EsParticionExtendida(Comando,nombreParticion)==1 && strcmp(modo,"fast")==0 ){
                 printf("SE ELIMINO PARTICION EXTENDIDA\n");
                 limpiarParticion(Comando,nombreParticion);
@@ -381,8 +384,47 @@ int main()
                 printf("SE ELIMINO PARTICION PRIMARIA\n");
                 limpiarParticion(Comando,nombreParticion);
             }
+
             if(EsParticionExtendida(Comando,nombreParticion)==0 && EsParticionPrimaria(Comando,nombreParticion)==0){
                 printf("NO SE PUEDE REALIZAR LA ELIMINACION\n");
+            }
+            // para la parte del full
+            long int tamaniosx;
+            FILE *fp;
+                fp = fopen(Comando,"r");
+                // AderirTamannio
+                fseek(fp, 0L, SEEK_END);
+                tamaniosx = ftell(fp);
+                fclose(fp);
+            long int ax = 0;
+            long int ax2 = 0;
+            if(EsParticionExtendida(Comando,nombreParticion)==1 && strcmp(modo,"full")==0 ){
+                printf("SE ELIMINO PARTICION EXTENDIDA*\n");
+                ax = EliminarParticion(Comando,nombreParticion);
+                ax2 = EliminarParticionLogica(Comando,nombreParticion);
+                remove(Comando);
+                fp = fopen(Comando,"wr+");
+                //printf("%i",nuevo);
+                    for(int x = 0; x<(tamaniosx + ax + ax2);x++){
+                        fputs( " ", fp);
+                    }
+                    printf("SE AUMENTO EL TAMAÑO DEL DISCO\n");
+                    fclose(fp);
+            }
+
+            if(EsParticionPrimaria(Comando,nombreParticion)==1 && strcmp(modo,"full") == 0){
+                printf("SE ELIMINO PARTICION PRIMARIA *\n");
+                //printf("%i\n",EliminarParticion(Comando,nombreParticion));
+                ax = EliminarParticion(Comando,nombreParticion);
+                //ax2 = EliminarParticionLogica(Comando,nombreParticion);
+                remove(Comando);
+                fp = fopen(Comando,"wr+");
+                //printf("%i",nuevo);
+                    for(int x = 0; x<(tamaniosx + ax);x++){
+                        fputs( " ", fp);
+                    }
+                    printf("SE AUMENTO EL TAMAÑO DEL DISCO\n");
+                    fclose(fp);
             }
 
         break;
@@ -1054,5 +1096,59 @@ struct Particion *aux;
 
 }
 
+long int EliminarParticion(char Archivo[],char nombre[]){
+ struct Particion *aux;
 
+     posP=0;
+
+     aux=primera;
+     long int tam= 0;
+     while(posP<numNodosP)
+       {
+          if(strcmp(aux->path,Archivo)==0 && strcmp(aux->nombre,nombre)==0){
+                    //printf("%i\n",aux->size);
+                    tam = aux->size;
+                    strcpy(aux->nombre,"");
+                    strcpy(aux->ajuste,"");
+                    strcpy(aux->path,"");
+                    aux->TDP = ' ';
+                    aux->size = 0;
+                    //aux->TDP = ' ';
+
+          }
+          aux= aux->siguiente;
+
+          posP++;
+       }
+
+
+return tam;
+}
+long int EliminarParticionLogica(char Archivo[], char nombre[]){
+struct Particion *aux;
+
+     posP=0;
+     long int pp = 0;
+     aux=primera;
+
+     while(posP<numNodosP)
+       {
+       //printf("VAMOS BIEN\n");
+          if(strcmp(aux->path,Archivo)==0 &&(aux->TDP=='l'||aux->TDP=='L')){
+                    //printf("%i\n",aux->size);
+                    pp = pp + aux->size;
+                    strcpy(aux->nombre,"");
+                    strcpy(aux->ajuste,"");
+                    strcpy(aux->path,"");
+                    aux->TDP = ' ';
+                    aux->size = 0;
+
+          }
+          aux= aux->siguiente;
+
+          posP++;
+       }
+
+return pp;
+}
 
