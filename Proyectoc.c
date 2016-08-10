@@ -55,6 +55,22 @@ int tamanioArchivo(char archivo[]);
 void cambiarTamanioParticion(char Archivo[], char nombre[] ,long int tamanio);
 long int EliminarParticion(char Archivo[],char nombre[]);
 long int EliminarParticionLogica(char Archivo[], char nombre[]);
+void MontandoParticion(char Archivo[], char nombre[]);
+
+struct ParticionesMontadas{
+   char path[1024];
+   char nombreParticion [1024];
+   char idParticion[1024];
+   struct ParticionesMontadas*siguiente;
+};
+struct ParticionesMontadas *primeraPM, *ultimaPM;
+int numNodosPM;
+int posPM;
+void inicializarMontada();
+void insertarMontada(char path[], char nombreParticion [],char idParticion[]);
+void visualizarMontadas();
+int TotalDeMontadas(char path []);
+
 int main()
 {
 
@@ -66,6 +82,7 @@ int main()
     char unitparticion;
     inicializar();
     inicializaraParticion();
+    inicializarMontada();
     char Comando [] = "";
     char Comando2 [] = "ComandoParaCrearArchivo";
     char Comando3 [] = "";
@@ -427,6 +444,14 @@ int main()
                     fclose(fp);
             }
 
+        break;
+        case 8:
+            visualizar();
+        break;
+        case 9:
+            MontandoParticion(Comando,nombreParticion);
+            printf("Visualizando Las montadas \n");
+            visualizarMontadas();
         break;
             case 4: break;
         }
@@ -1150,5 +1175,227 @@ struct Particion *aux;
        }
 
 return pp;
+}
+
+void MontandoParticion(char Archivo[], char nombre[]){
+
+struct Archivo *aux;
+     pos=0;
+     aux=primero;
+      while(pos<numNodos)
+       {
+          //printf(" %d.- ", pos+1);
+          //printf(" %s\n", aux->path);
+          if(strcmp(aux->path,Archivo)== 0){
+            if(pos+1 == 1){
+                printf("La Letra es A\n");
+                char id [1024] = "VDa";
+                insertarMontada(Archivo,nombre,id);
+            }
+            if(pos+1 == 2){
+                printf("La Letra es B\n");
+                char id [1024] = "VDb";
+                insertarMontada(Archivo,nombre,id);
+            }
+            if(pos+1 == 3){
+                printf("La Letra es C\n");
+                char id [1024] = "VDc";
+                insertarMontada(Archivo,nombre,id);
+            }
+            if(pos+1 == 4){
+                printf("La Letra es D\n");
+                char id [1024] = "VDd";
+                insertarMontada(Archivo,nombre,id);
+            }
+            if(pos+1 == 5){
+                printf("La Letra es E\n");
+                char id [1024] = "VDe";
+                insertarMontada(Archivo,nombre,id);
+            }
+            if(pos+1 == 6){
+                printf("La Letra es F\n");
+                char id [1024] = "VDf";
+                insertarMontada(Archivo,nombre,id);
+            }
+            if(pos+1 == 7){
+                printf("La Letra es G\n");
+                char id [1024] = "VDg";
+                insertarMontada(Archivo,nombre,id);
+            }
+            if(pos+1 == 8){
+                printf("La Letra es H\n");
+                char id [1024] = "VDh";
+                insertarMontada(Archivo,nombre,id);
+            }
+            if(pos+1 == 9){
+                printf("La Letra es I\n");
+                char id [1024] = "VDi";
+                insertarMontada(Archivo,nombre,id);
+            }
+            if(pos+1 == 10){
+                printf("La Letra es J\n");
+               char id [1024] = "VDj";
+                insertarMontada(Archivo,nombre,id);
+            }
+            if(pos+1 == 11){
+                printf("La Letra es K\n");
+                char id [1024] = "VDk";
+                insertarMontada(Archivo,nombre,id);
+            }
+            if(pos+1 == 12){
+                printf("La Letra es L\n");
+                char id [1024] = "VDl";
+                insertarMontada(Archivo,nombre,id);
+            }
+             if(pos+1 == 13){
+                printf("La Letra es M\n");
+                char id [1024] = "VDm";
+                insertarMontada(Archivo,nombre,id);
+            }
+             if(pos+1 == 14){
+                printf("La Letra es N\n");
+               char id [1024] = "VDn";
+                insertarMontada(Archivo,nombre,id);
+            }
+             if(pos+1 == 15){
+                printf("La Letra es O\n");
+                char id [1024] = "VDo";
+                insertarMontada(Archivo,nombre,id);
+            }
+             if(pos+1 == 16){
+                printf("La Letra es P\n");
+                char id [1024] = "VDp";
+                insertarMontada(Archivo,nombre,id);
+            }
+             if(pos+1 == 17){
+                printf("La Letra es Q\n");
+                char id [1024] = "VDq";
+                insertarMontada(Archivo,nombre,id);
+            }
+             if(pos+1 == 18){
+                printf("La Letra es R\n");
+                char id [1024] = "VDr";
+                insertarMontada(Archivo,nombre,id);
+            }
+             if(pos+1 == 19){
+                printf("La Letra es S\n");
+                char id [1024] = "VDs";
+                insertarMontada(Archivo,nombre,id);
+            }
+             if(pos+1 == 20){
+                printf("La Letra es T\n");
+                char id [1024] = "VDt";
+                insertarMontada(Archivo,nombre,id);
+            }
+             if(pos+1 == 21){
+                printf("La Letra es U\n");
+                char id [1024] = "VDu";
+                insertarMontada(Archivo,nombre,id);
+            }
+             if(pos+1 == 22){
+                printf("La Letra es V\n");
+                char id [1024] = "VDv";
+                insertarMontada(Archivo,nombre,id);
+            }
+             if(pos+1 == 23){
+                printf("La Letra es W\n");
+                char id [1024] = "VDw";
+                insertarMontada(Archivo,nombre,id);
+            }
+             if(pos+1 == 24){
+                printf("La Letra es X\n");
+                char id [1024] = "VDx";
+                insertarMontada(Archivo,nombre,id);
+            }
+             if(pos+1 == 25){
+                printf("La Letra es Y\n");
+                char id [1024] = "VDy";
+                insertarMontada(Archivo,nombre,id);
+            }
+             if(pos+1 == 26){
+                printf("La Letra es Z\n");
+                char id [1024] = "VDz";
+                insertarMontada(Archivo,nombre,id);
+            }
+
+
+          }
+          aux= aux->siguiente;
+          pos++;
+       }
+
+
+}
+
+void inicializarMontada(){
+    primeraPM = NULL;
+    ultimaPM = NULL;
+}
+void insertarMontada(char path[], char nombreParticion [],char idParticion[]){
+ struct ParticionesMontadas *nuevo;
+    nuevo=( struct ParticionesMontadas*)malloc(sizeof(struct ParticionesMontadas));
+    if(nuevo==NULL)
+         printf("\n MEMORIA INSUFICIENTE\n");
+
+     else
+     {
+        strcpy(nuevo->path,path);
+        strcpy(nuevo->nombreParticion,nombreParticion);
+        strcpy(nuevo->idParticion,idParticion);
+         if(primeraPM==NULL)
+           {
+            primeraPM =nuevo;
+            ultimaPM =nuevo;
+
+         }else{
+
+           ultimaPM->siguiente=nuevo;
+           ultimaPM=nuevo;
+              }
+       }
+       numNodosPM ++;
+
+
+
+
+
+}
+void visualizarMontadas(){
+struct ParticionesMontadas *aux;
+     posPM=0;
+
+     aux=primeraPM;
+
+     while(posPM<numNodosPM)
+       { printf(" %d.- ", posPM+1);
+         printf(" %s", aux->path);
+         printf(" %s", aux->nombreParticion);
+         printf(" %s\n",aux->idParticion);
+          aux= aux->siguiente;
+          posPM++;
+       }
+
+    if(numNodosPM==0)
+       printf("\n LISTA VACIA");
+
+
+}
+int TotalDeMontadas(char path []){
+    struct ParticionesMontadas *aux;
+     posPM=0;
+     int a = 0;
+     aux=primeraPM;
+     while(posPM<numNodosPM)
+       { //printf(" %d.- ", posPM+1);
+         //printf(" %s", aux->path);
+         //printf(" %s\n",aux->idParticion);
+         if(strcmp(aux->path,path)){
+            a++;
+         }
+          aux= aux->siguiente;
+          posPM++;
+       }
+return a;
+
 }
 
