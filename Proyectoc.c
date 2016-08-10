@@ -57,7 +57,8 @@ void cambiarTamanioParticion(char Archivo[], char nombre[] ,long int tamanio);
 long int EliminarParticion(char Archivo[],char nombre[]);
 long int EliminarParticionLogica(char Archivo[], char nombre[]);
 void MontandoParticion(char Archivo[], char nombre[]);
-
+int BuscandoMontaje(char identificador []);
+int ObtenerPosicion(char identificador []);
 struct ParticionesMontadas{
    char path[1024];
    char nombreParticion [1024];
@@ -72,14 +73,11 @@ void insertarMontada(char path[], char nombreParticion [],char idParticion[]);
 void visualizarMontadas();
 int TotalDeMontadas(char path []);
 int YaHaSidoMontada(char path[],char nombre []);
-
+void EliminarMontaje(char identificador[]);
 int main()
 {
-
     int op;
     char nombreParticion[1024];
-
-
     long int nuevaparticion;
     char unitparticion;
     inicializar();
@@ -463,29 +461,33 @@ int main()
             }else{
                 printf("EL DISCO Y/0 PARTICION NO EXISTE\n");
             }
+            //donde se ontaron las cosas
+        break;
+        case 10:
+        //vamo a desmontarloss
+
+        if( BuscandoMontaje(Comando)==1){
+            EliminarMontaje(Comando);
+            //printf("HOLA");
+        }else
+        {
+            printf("LA PARTICION NO HA SIDO MONTADA\n");
+        }
         break;
             case 4: break;
         }
     }
-
-
-
-//system("mkdir /home/romoeoaxpuac/Escritorio/RebecaCaradeTortuca");
 FILE *fp;
 
  	char cadena[] = "/home/romoeoaxpuac/Escritorio/SoyLaTos.dsk";
-
  	fp = fopen ("/home/romoeoaxpuac/Escritorio/Disco2.dsk","wb+");
-
  	int a= 0;
  	for(a;a<100;a++){
  	fputs( " ", fp );
     }
  	fclose ( fp );
  	////
-
-
-        printf("\nHola mundo");
+ 	    printf("\nHola mundo");
         printf("\n");
 
         return 0;
@@ -542,7 +544,6 @@ else {
 }
 
 }
-
 void inicializar(){
       primero=NULL;
       ultimo=NULL;
@@ -576,33 +577,19 @@ void insertar_ultimo(char path[],int tamanio, char tipo){
        numNodos++;
 
     }
-
-
 void visualizar(){
-
 struct Archivo *aux;
-
      pos=0;
-
      aux=primero;
-
      while(pos<numNodos)
        {
           printf(" %d.- ", pos+1);
-
           printf(" %s\n", aux->path);
-
           aux= aux->siguiente;
-
           pos++;
        }
-
-    if(numNodos==0)
-       printf("\n LISTA VACIA");
 }
-
-  void buscar(char path [] )   {
-
+void buscar(char path [] )   {
      struct Archivo *aux;
      pos=0;
      aux=primero;
@@ -625,7 +612,6 @@ struct Archivo *aux;
 
 
 }
-
 int tamanioArchivo(char archivo[]){
 struct Archivo *aux;
      pos=0;
@@ -666,7 +652,6 @@ struct Archivo *aux;
        }
 
 }
-
 void inicializaraParticion(){
     primera = NULL;
     ultima = NULL;
@@ -819,8 +804,6 @@ struct Particion *aux;
 return a;
 
 }
-
-
 long int tamanioExtendida(char path[]){
 struct Particion *aux;
      posP=0;
@@ -860,7 +843,6 @@ void cambiandoTamanioExtendida(char path [], long int tamanio){
        }
 
 }
-
 void primerAjuste(char path[],char nombreParticion[],long int tamanio){
 struct Particion *aux2;
      posP=0;
@@ -975,7 +957,6 @@ struct Particion *aux;
 
 return 0;
 }
-
 long int tamanioDeParticion(char path [], char nombreParticion[]){
 struct Particion *aux;
 
@@ -1034,8 +1015,6 @@ struct Particion *aux;
 
 
 }
-
-
 int EsParticionPrimaria(char path[],char nombreParticion[]){
 
 struct Particion *aux;
@@ -1084,8 +1063,6 @@ int EsParticionExtendida(char path[], char nombreParticion[]){
 
 return 0;
 }
-
-
 void limpiarParticion(char path[],char nombreParticion[]){
  struct Particion *aux;
 
@@ -1111,11 +1088,8 @@ void limpiarParticion(char path[],char nombreParticion[]){
 
 }
 void limpiarParticionLogica(char path[], char nombreParticion[]){
-
 struct Particion *aux;
-
      posP=0;
-
      aux=primera;
      while(posP<numNodosP)
        {
@@ -1131,12 +1105,9 @@ struct Particion *aux;
        }
 
 }
-
 long int EliminarParticion(char Archivo[],char nombre[]){
  struct Particion *aux;
-
      posP=0;
-
      aux=primera;
      long int tam= 0;
      while(posP<numNodosP)
@@ -1162,7 +1133,6 @@ return tam;
 }
 long int EliminarParticionLogica(char Archivo[], char nombre[]){
 struct Particion *aux;
-
      posP=0;
      long int pp = 0;
      aux=primera;
@@ -1187,9 +1157,7 @@ struct Particion *aux;
 
 return pp;
 }
-
 void MontandoParticion(char Archivo[], char nombre[]){
-
 struct Archivo *aux;
      pos=0;
      aux=primero;
@@ -1391,7 +1359,6 @@ struct Archivo *aux;
 
 
 }
-
 void inicializarMontada(){
     primeraPM = NULL;
     ultimaPM = NULL;
@@ -1432,10 +1399,16 @@ struct ParticionesMontadas *aux;
      aux=primeraPM;
 
      while(posPM<numNodosPM)
-       { printf(" %d.- ", posPM+1);
+       {
+        if(strcmp(aux->idParticion,"-")==0){
+            //numNodos;
+            //posPM--;
+        }else{
+         //printf(" %d.- ", posPM+1);
          printf(" %s", aux->path);
          printf(" %s", aux->nombreParticion);
          printf(" %s\n",aux->idParticion);
+         }
           aux= aux->siguiente;
           posPM++;
        }
@@ -1463,7 +1436,6 @@ int TotalDeMontadas(char path []){
 return a;
 
 }
-
 int ExisteParticion(char path[], char nombrePar []){
 struct Particion *aux;
      posP=0;
@@ -1478,7 +1450,6 @@ struct Particion *aux;
        }
 return 0;
 }
-
 int YaHaSidoMontada(char path[],char nombre []){
 struct ParticionesMontadas *aux;
      posPM=0;
@@ -1493,5 +1464,66 @@ struct ParticionesMontadas *aux;
        }
 return 0;
 }
+void EliminarMontaje(char identificador[]){
+ struct ParticionesMontadas *aux;
+   struct ParticionesMontadas *anterior;
+   int posPM=1;
+   aux = primeraPM;   //
+           if(strcmp(primeraPM->idParticion,identificador)==0){
+               aux=primeraPM;
+               primeraPM = primeraPM->siguiente;
+               free(aux);
+               numNodosPM--;
+             }
+           else if(strcmp(ultimaPM->idParticion,identificador) == 0){
+           aux = ultimaPM;
+           anterior->siguiente=NULL;
+           ultimaPM=anterior;
+           free(aux);
+           numNodosPM--;
+           }else{
+             while(posPM <= numNodosPM){
+                    if(strcmp(aux->idParticion,identificador)==0){
+                        strcpy(aux->idParticion,"-");
+                        strcpy(aux->path, "-");
+                        strcpy(aux->nombreParticion, "-");
+                    }
+                 posPM++;
+                 aux= aux->siguiente;
+                }
+            //numNodosPM--;
+     }
 
+}
+int BuscandoMontaje(char identificador []){
+struct ParticionesMontadas *aux;
+     posPM=0;
+     aux=primeraPM;
+     while(posPM<numNodosPM)
+       {
+            if(strcmp(aux->idParticion,identificador)==0){
+                return 1;
+            }
+          aux= aux->siguiente;
+          posPM++;
+       }
+return 0;
+
+
+}
+int ObtenerPosicion(char identificador []){
+struct ParticionesMontadas *aux;
+     int posPMx=0;
+     aux=primeraPM;
+     while(posPMx<numNodosPM)
+       {
+            if(strcmp(aux->idParticion,identificador)==0){
+                return posPMx;
+            }
+          aux= aux->siguiente;
+          posPMx++;
+       }
+return 0;
+
+}
 
