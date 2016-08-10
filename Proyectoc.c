@@ -31,6 +31,10 @@ void PeorAjuste(char path[],char nombreParticion[],long int tamanio);
 void cambiandoTamanioExtendida(char path [], long int tamanio);
 long int tamanioDeParticion(char path [], char nombreParticion[]);
 int VericiandoParticion(char path [], char nombreParticion[]);
+int EsParticionPrimaria(char path[],char nombreParticion[]);
+int EsParticionExtendida(char path[], char nombreParticion[]);
+void limpiarParticion(char path[],char nombreParticion[]);
+void limpiarParticionLogica(char path[], char nombreParticion[]);
 struct Archivo{
    char path[1024];
    int tamanio;
@@ -88,6 +92,9 @@ int main()
         //tipoParticion = 'e';
         char AjusteParticion[1024] = "BF";
         int AderirTamannio = 2;
+         /// para el delelte
+         char modo [1024] = "fast";
+         //char modo [10] = "full";
         ///strcpy(AjusteParticion,"BW");
         //strcpy(nombreParticion,"Particion");
                 if( unitparticion == 'b' || unitparticion == 'b'){
@@ -361,6 +368,22 @@ int main()
         break;
         case 6:
             visualizarParticiones();
+
+        break;
+        case 7:
+            if(EsParticionExtendida(Comando,nombreParticion)==1 && strcmp(modo,"fast")==0 ){
+                printf("SE ELIMINO PARTICION EXTENDIDA\n");
+                limpiarParticion(Comando,nombreParticion);
+                limpiarParticionLogica(Comando,nombreParticion);
+            }
+
+            if(EsParticionPrimaria(Comando,nombreParticion)==1 && strcmp(modo,"fast") == 0){
+                printf("SE ELIMINO PARTICION PRIMARIA\n");
+                limpiarParticion(Comando,nombreParticion);
+            }
+            if(EsParticionExtendida(Comando,nombreParticion)==0 && EsParticionPrimaria(Comando,nombreParticion)==0){
+                printf("NO SE PUEDE REALIZAR LA ELIMINACION\n");
+            }
 
         break;
             case 4: break;
@@ -933,3 +956,103 @@ struct Particion *aux;
 
 
 }
+
+
+int EsParticionPrimaria(char path[],char nombreParticion[]){
+
+struct Particion *aux;
+
+     posP=0;
+
+     aux=primera;
+
+     while(posP<numNodosP)
+       {
+          if(strcmp(aux->path,path)==0 && strcmp(aux->nombre,nombreParticion)==0 && (aux->TDP == 'P'|| aux->TDP == 'p')){
+                    //printf("%i\n",aux->size);
+                    return 1;
+
+
+          }
+          aux= aux->siguiente;
+
+          posP++;
+       }
+
+
+return 0;
+
+}
+int EsParticionExtendida(char path[], char nombreParticion[]){
+    struct Particion *aux;
+
+     posP=0;
+
+     aux=primera;
+
+     while(posP<numNodosP)
+       {
+          if(strcmp(aux->path,path)==0 && strcmp(aux->nombre,nombreParticion)==0 && (aux->TDP == 'E'|| aux->TDP == 'e')){
+                    //printf("%i\n",aux->size);
+                    return 1;
+
+
+          }
+          aux= aux->siguiente;
+
+          posP++;
+       }
+
+
+return 0;
+}
+
+
+void limpiarParticion(char path[],char nombreParticion[]){
+ struct Particion *aux;
+
+     posP=0;
+
+     aux=primera;
+
+     while(posP<numNodosP)
+       {
+          if(strcmp(aux->path,path)==0 && strcmp(aux->nombre,nombreParticion)==0){
+                    //printf("%i\n",aux->size);
+                    strcpy(aux->nombre,"Libre");
+                    strcpy(aux->ajuste,"");
+                    //aux->TDP = ' ';
+
+          }
+          aux= aux->siguiente;
+
+          posP++;
+       }
+
+
+
+}
+void limpiarParticionLogica(char path[], char nombreParticion[]){
+
+struct Particion *aux;
+
+     posP=0;
+
+     aux=primera;
+     while(posP<numNodosP)
+       {
+          if(strcmp(aux->path,path)==0 &&(aux->TDP=='l'||aux->TDP=='L')){
+                    //printf("%i\n",aux->size);
+                    strcpy(aux->nombre,"Libre");
+                    strcpy(aux->ajuste,"");
+
+          }
+          aux= aux->siguiente;
+
+          posP++;
+       }
+
+}
+
+
+
