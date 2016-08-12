@@ -42,7 +42,7 @@ struct Archivo{
    char tipo;
    struct Archivo *siguiente;
 };
-
+//metodos
 struct Archivo *primero, *ultimo;
 int numNodos;
 int pos;
